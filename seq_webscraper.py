@@ -1,27 +1,10 @@
 #coding: utf-8
+import queue
+import sqlite3
 import logging
 import sqlite3
 from selenium import webdriver
-
-# Logging setup, formatting, etc, for easy debugging
-def create_logger(save_file, mode='a'):
-    """creates a logger with some default settings and writes output to save_file"""
-    logger = logging.getLogger("spider")
-    logger.setLevel(logging.DEBUG)
-    h1 = logging.FileHandler(save_file, mode)
-    f1 = logging.Formatter("%(asctime)s - %(lineno)d - %(message)s")
-    h1.setFormatter(f1)
-    logger.addHandler(h1)
-    return logger
-
-def create_db(db_name,table_name,cols):
-	# Initial database setup
-	# sqlite3.connect('example.db', check_same_thread = False)
-	conn = sqlite3.connect(db_name)
-	conn.execute('''DROP TABLE IF EXISTS {}'''.format(table_name))
-	conn.execute('''CREATE TABLE {} ({})'''.format(table_name,', '.join([' '.join([k, cols[k]]) for k in cols])))
-	conn.commit()
-	conn.close()
+from helper.help import create_logger, create_db
 
 logger = create_logger(save_file="log/seq_log.log",mode='w')
 create_db('example.db','web_results_seq',{'url':'text','data':'text'})

@@ -1,38 +1,13 @@
 #coding: utf-8
-import logging
 import queue
-import concurrent.futures
 import sqlite3
+import concurrent.futures
 import threading
 from selenium import webdriver
-
+from helper.help import create_logger, create_db
 
 DB_NAME = "example.db"
 TBL_NAME = "multi_crawler"
-
-
-def create_logger(save_file, mode='a'):
-    """Create logger with some default settings.
-    Writes output to save_file"""
-    logger = logging.getLogger("spider")
-    logger.setLevel(logging.DEBUG)
-    h1 = logging.FileHandler(save_file, mode)
-    f1 = logging.Formatter("%(asctime)s - %(lineno)d - %(message)s")
-    h1.setFormatter(f1)
-    logger.addHandler(h1)
-    return logger
-
-
-def create_db(db_name, table_name, cols):
-    """Init db helper function
-    TODO: reserach check_same_thread sqlite3 parameter"""
-    conn = sqlite3.connect(db_name)
-    conn.execute('''DROP TABLE IF EXISTS {}'''.format(table_name))
-    conn.execute('''CREATE TABLE {table} ({cols})'''
-        .format(table=TBL_NAME,
-                cols=', '.join([' '.join([k, cols[k]]) for k in cols])))
-    conn.commit()
-    conn.close()
 
 logger = create_logger(save_file="log/multi_crawler.log", mode='w')
 create_db(DB_NAME, TBL_NAME, {'url': 'text', 'data': 'text'})
